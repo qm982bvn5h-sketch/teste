@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Animation 💕✨</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      background: linear-gradient(45deg, #ff006e, #8338ec, #3a86ff, #06ffa5);
+      background-size: 400% 400%;
+      animation: gradient 15s ease infinite;
+      min-height: 100vh;
+      overflow: hidden;
+      font-family: 'Arial', sans-serif;
+      color: white;
+      text-align: center;
+    }
+
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .container {
+      position: relative;
+      z-index: 10;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .test-text {
+      font-size: 4.5rem;
+      font-weight: bold;
+      text-shadow: 0 0 30px rgba(255,255,255,0.9),
+                   0 0 60px rgba(255,0,110,0.8);
+      animation: glow 2s ease-in-out infinite alternate,
+                 bounce 3s ease-in-out infinite;
+      margin-bottom: 30px;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 20px #fff, 0 0 40px #ff006e; }
+      to { text-shadow: 0 0 40px #fff, 0 0 80px #3a86ff; }
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-25px); }
+    }
+
+    .subtitle {
+      font-size: 2rem;
+      margin-top: 20px;
+      opacity: 0;
+      animation: fadeIn 4s forwards 1s;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    .emoji {
+      position: absolute;
+      font-size: 35px;
+      pointer-events: none;
+      z-index: 5;
+      animation: rain linear forwards;
+    }
+
+    @keyframes rain {
+      to {
+        transform: translateY(105vh) rotate(800deg);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1 class="test-text">CECI EST UN TEST</h1>
+    <p class="subtitle">Et il est plutôt beau non ? 💕✨</p>
+  </div>
+
+  <!-- Musique (optionnelle) -->
+  <div style="position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 100;">
+    <button id="playBtn" style="padding: 12px 25px; font-size: 1.1rem; border-radius: 50px; border: none; background: white; color: #ff006e; cursor: pointer;">
+      ▶️ Jouer Musique
+    </button>
+  </div>
+
+  <audio id="bgMusic" loop>
+    <source src="https://assets.mixkit.co/music/preview/123/123-preview.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    // === Pluie d'emojis intense ===
+    function createEmoji() {
+      const emoji = document.createElement('div');
+      emoji.classList.add('emoji');
+      
+      const emojis = ['💕','❤️','💖','💘','✨','🌟','💫','🥰','🌸','💗','🎀','🦋'];
+      emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      
+      emoji.style.left = Math.random() * 100 + 'vw';
+      emoji.style.top = '-60px';
+      emoji.style.animationDuration = (Math.random() * 3.5 + 3) + 's';
+      emoji.style.fontSize = (Math.random() * 28 + 28) + 'px';
+      emoji.style.opacity = Math.random() * 0.7 + 0.6;
+      
+      document.body.appendChild(emoji);
+      
+      setTimeout(() => emoji.remove(), 8000);
+    }
+
+    // Lancer beaucoup d'emojis
+    setInterval(createEmoji, 80);           // Pluie très dense
+    setInterval(createEmoji, 60);           // Encore plus !
+
+    // Quelques emojis au démarrage
+    for (let i = 0; i < 25; i++) {
+      setTimeout(createEmoji, i * 40);
+    }
+
+    // === Musique ===
+    const music = document.getElementById('bgMusic');
+    const btn = document.getElementById('playBtn');
+    let isPlaying = false;
+
+    btn.addEventListener('click', (e) => {
+      e.stopImmediatePropagation();
+      if (isPlaying) {
+        music.pause();
+        btn.textContent = '▶️ Jouer Musique';
+      } else {
+        music.play();
+        btn.textContent = '⏸️ Pause';
+      }
+      isPlaying = !isPlaying;
+    });
+
+    // Auto-play après premier clic sur la page
+    document.body.addEventListener('click', () => {
+      if (!isPlaying) {
+        music.play().catch(() => {});
+        isPlaying = true;
+        btn.textContent = '⏸️ Pause';
+      }
+    }, { once: true });
+  </script>
+</body>
+</html>
